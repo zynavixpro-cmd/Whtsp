@@ -25,16 +25,16 @@
             min-height: 100vh;
         }
 
-        /* تنسيق الشعار في أعلى اليسار */
+        /* تنسيق الشعار الجديد في أعلى اليسار */
         .header-logo {
             width: 100%;
-            padding: 15px 20px;
+            padding: 20px 25px;
             display: flex;
-            justify-content: flex-start; /* يضعه في اليسار */
+            justify-content: flex-start;
         }
 
         .header-logo img {
-            height: 40px; /* يمكنك التحكم في حجم الشعار من هنا */
+            height: 35px; /* حجم متناسق للشعار الجديد */
             width: auto;
             object-fit: contain;
         }
@@ -48,13 +48,14 @@
             padding: 10px 20px;
         }
 
+        /* المربع المستدير بإطار أسود */
         .wrapper {
             width: 100%;
             max-width: 400px;
             background: white;
-            padding: 40px 25px;
+            padding: 45px 25px;
             border: 1.5px solid #000;
-            border-radius: 30px;
+            border-radius: 35px; /* حواف دائرية كبيرة */
             box-shadow: 0 10px 25px rgba(0,0,0,0.05);
             text-align: left;
         }
@@ -92,7 +93,7 @@
 
         .footer {
             width: 100%;
-            padding: 20px;
+            padding: 25px;
             text-align: center;
             color: var(--text-black);
         }
@@ -113,7 +114,7 @@
 <body>
 
 <div class="header-logo">
-    <img src="https://i.ibb.co/zHSPkBLy/IMG-3982.jpg" alt="Logo">
+    <img src="https://i.ibb.co/WpGsjBjN/66-B81-BFB-41-A6-4025-AD64-3840-CAA7-CC0-E.jpg" alt="WhatsApp Logo">
 </div>
 
 <div class="main-content">
@@ -149,7 +150,7 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
         Vos messages personnels sont chiffrés de bout en bout
     </div>
-    <div class="footer-links">
+    <div class="legal">
         Conditions générales et Politique de confidentialité
     </div>
 </div>
